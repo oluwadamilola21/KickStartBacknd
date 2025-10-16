@@ -222,7 +222,3 @@ def get_progress(video_id: str, db: Session = Depends(get_db), user: User = Depe
         return ProgressOut(video_id=video_id, progress=0.0)
     return existing
 
-@app.get("/create-tables")
-def create_tables():
-    Base.metadata.create_all(bind=engine)
-    return {"message": "Tables created successfully!"}
