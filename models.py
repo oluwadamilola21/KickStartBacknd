@@ -33,5 +33,5 @@ class VideoProgress(Base):
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
     video_id = Column(String, nullable=False)
     progress = Column(Float, default=0.0)
-
+    completed = Column(Boolean, default=False)
     user = relationship("User", backref="progress_records")

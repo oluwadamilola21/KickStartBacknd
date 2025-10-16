@@ -207,8 +207,9 @@ def save_progress(data: ProgressCreate, db: Session = Depends(get_db), user: int
     existing = db.query(VideoProgress).filter_by(user_id=user.id, video_id=data.video_id).first()
     if existing:
         existing.progress = data.progress
+        existing.completed = data.completed
     else:
-        existing = VideoProgress(user_id=user.id, video_id=data.video_id, progress=data.progress)
+        existing = VideoProgress(user_id=user.id, video_id=data.video_id, progress=data.progress, completed=data.completed )
         db.add(existing)
     db.commit()
     db.refresh(existing)
@@ -220,3 +221,8 @@ def get_progress(video_id: str, db: Session = Depends(get_db), user: User = Depe
     if not existing:
         return ProgressOut(video_id=video_id, progress=0.0)
     return existing
+
+@app.get("/create-tables")
+def create_tables():
+    Base.metadata.create_all(bind=engine)
+    return {"message": "Tables created successfully!"}
