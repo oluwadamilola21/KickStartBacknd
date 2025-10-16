@@ -34,4 +34,4 @@ class VideoProgress(Base):
     video_id = Column(String, nullable=False)
     progress = Column(Float, default=0.0)
     completed = Column(Boolean, default=False)
-    user = relationship("User", backref="progress_records")
+    user = relationship("User", back_populates="video_progress", overlaps="video_progress")
