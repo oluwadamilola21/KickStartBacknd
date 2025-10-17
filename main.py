@@ -222,3 +222,12 @@ def get_progress(video_id: str, db: Session = Depends(get_db), user: User = Depe
         return ProgressOut(video_id=video_id, progress=0.0)
     return existing
 
+@app.get("/user-progress-summary")
+def user_progress_summary(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    total_videos = db.query(VideoProgress).filter(VideoProgress.user_id == user.id).count()
+    completed_videos = (
+        db.query(VideoProgress)
+        .filter(VideoProgress.user_id == user.id, VideoProgress.completed == True)
+        .count()
+    )
+    return {"completed": completed_videos, "total": total_videos}
