@@ -231,3 +231,17 @@ def user_progress_summary(db: Session = Depends(get_db), user: User = Depends(ge
         .count()
     )
     return {"completed": completed_videos, "total": total_videos}
+
+@app.get("/user-progress")
+def get_user_progress(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    """Return all video progress for a user as {video_id: {progress, completed}}"""
+    all_progress = (
+        db.query(VideoProgress)
+        .filter(VideoProgress.user_id == user.id)
+        .all()
+    )
+    return {
+        vp.video_id: {"progress": vp.progress, "completed": vp.completed}
+        for vp in all_progress
+    }
+
